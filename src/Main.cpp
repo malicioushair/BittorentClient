@@ -1,12 +1,20 @@
 #include <cctype>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
+#include <iterator>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "lib/nlohmann/json.hpp"
 
 using json = nlohmann::json;
+
+bool is_number(const std::string & value)
+{
+	return !value.empty() && std::find_if(value.begin(), value.end(), [](unsigned char c) { return !std::isdigit(c); }) == value.end();
+}
 
 json decode_bencoded_value(const std::string & encoded_value)
 {
@@ -26,10 +34,24 @@ json decode_bencoded_value(const std::string & encoded_value)
 			throw std::runtime_error("Invalid encoded value: " + encoded_value);
 		}
 	}
-	else
+	if (encoded_value.starts_with('i') && encoded_value.ends_with('e'))
 	{
-		throw std::runtime_error("Unhandled encoded value: " + encoded_value);
+		const auto resultStr = std::string(std::next(encoded_value.cbegin()), std::prev(encoded_value.cend()));
+		try
+		{
+			return json(std::stoll(resultStr));
+		}
+		catch (const std::invalid_argument & ex)
+		{
+			throw std::runtime_error("Failed to convert string to int. Invalid argument! Input value: " + resultStr + ". Message: " + ex.what());
+		}
+		catch (const std::out_of_range & ex)
+		{
+			throw std::runtime_error("Failed to convert string to int. Out of range! Input value: " + resultStr + ". Message: " + ex.what());
+		}
 	}
+	else
+		throw std::runtime_error("Unhandled encoded value: " + encoded_value);
 }
 
 int main(int argc, char * argv[])
