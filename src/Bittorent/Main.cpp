@@ -7,9 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "Decoder.h"
-
-#include "lib/nlohmann/json.hpp"
+#include "../Decoder/Decoder.h"
 
 using namespace Bittorent;
 

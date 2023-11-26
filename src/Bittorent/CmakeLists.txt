@@ -1,0 +1,2 @@
+link_libraries(Decoder)
+add_executable(bittorrent Main.cpp)
