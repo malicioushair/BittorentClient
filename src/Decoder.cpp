@@ -10,22 +10,28 @@ enum class EncodedValueType
 	String,
 	Number,
 	List,
+	Map,
 	Invalid,
 };
 
-bool IsNumber(const std::string & encodedValue)
+auto IsNumber(const std::string & encodedValue)
 {
 	return encodedValue.starts_with('i') && encodedValue.ends_with('e');
 }
 
-bool IsList(const std::string & encodedValue)
+auto IsList(const std::string & encodedValue)
 {
 	return encodedValue.starts_with('l') && encodedValue.ends_with('e');
 }
 
-bool IsString(const std::string & encodedValue)
+auto IsString(const std::string & encodedValue)
 {
 	return std::isdigit(encodedValue[0]) && (encodedValue.find(':') != std::string::npos);
+}
+
+auto IsMap(const std::string & encodedValue)
+{
+	return encodedValue.starts_with('d') && encodedValue.ends_with('e');
 }
 
 EncodedValueType GetEncodedValueType(const std::string & encodedValue)
@@ -36,6 +42,8 @@ EncodedValueType GetEncodedValueType(const std::string & encodedValue)
 		return EncodedValueType::Number;
 	else if (IsList(encodedValue))
 		return EncodedValueType::List;
+	else if (IsMap(encodedValue))
+		return EncodedValueType::Map;
 	else
 		return EncodedValueType::Invalid;
 }
@@ -146,6 +154,46 @@ auto ListStrToJson(const std::string & list)
 	return json(ParseList(list));
 }
 
+auto ParseMap(const std::string & encodedMap)
+{
+	auto frontIt = std::next(encodedMap.cbegin());
+	const auto endIt = std::prev(encodedMap.cend());
+
+	const auto encodedMapParsed = [&] { return frontIt == endIt; };
+
+	std::string result = "{";
+	while (!encodedMapParsed())
+	{
+		const auto getRemainingString = [&] { return std::string(frontIt, endIt); };
+
+		const auto key = ParseStringInList(frontIt, getRemainingString());
+		const auto value = [&] {
+			const auto encodedValueType = GetEncodedValueType(getRemainingString());
+			switch (encodedValueType)
+			{
+				case EncodedValueType::String:
+					return ParseStringInList(frontIt, getRemainingString());
+				case EncodedValueType::Number:
+					return ParseNumberInList(frontIt, getRemainingString());
+				default:
+					throw std::runtime_error("Invalid value type");
+			}
+		}();
+
+		result.append(std::format("{}: {}", key, value));
+		if (!encodedMapParsed())
+			result.append(", ");
+	}
+
+	result.append("}");
+	return result;
+}
+
+auto MapStrToJson(const std::string & map)
+{
+	return json(ParseMap(map));
+}
+
 }
 
 json Decoder::DecodeBencodedValue(const std::string & encodedValue)
@@ -162,6 +210,9 @@ json Decoder::DecodeBencodedValue(const std::string & encodedValue)
 
 		case EncodedValueType::List:
 			return ListStrToJson(encodedValue);
+
+		case EncodedValueType::Map:
+			return MapStrToJson(encodedValue);
 
 		default:
 			throw std::runtime_error("Unhandled encoded value: " + encodedValue);
