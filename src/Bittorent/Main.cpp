@@ -1,11 +1,5 @@
-#include <cctype>
-#include <cstdlib>
-#include <exception>
 #include <iostream>
-#include <iterator>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <string.h>
 
 #include "../Decoder/Decoder.h"
 
@@ -19,9 +13,7 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	std::string command = argv[1];
-
-	if (command == "decode")
+	if (const auto command = argv[1]; strcmp(command, "decode") == 0)
 	{
 		if (argc < 3)
 		{
