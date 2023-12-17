@@ -1,7 +1,8 @@
 #include <iostream>
 
-#include "../Decoder/Decoder.h"
 #include "CommandLineParser/CommandLineParser.h"
+#include "Decoder/Decoder.h"
+
 
 using namespace Bittorent;
 

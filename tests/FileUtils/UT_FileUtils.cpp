@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <gtest/gtest.h>
 
-#include <../../../../../../dev/CodeCrafters/codecrafters-bittorrent-cpp/src/FileUtils/FileUtils.h>
+#include <FileUtils/FileUtils.h>
 
 TEST(FileUtils, TestReadWrite)
 {

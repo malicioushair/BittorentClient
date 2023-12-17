@@ -14,6 +14,8 @@ conan_cmake_run(
      BUILD missing
 )
 
+include_directories(${PROJECT_SOURCE_DIR}/src)
+
 enable_testing()
 
 add_subdirectory(src)

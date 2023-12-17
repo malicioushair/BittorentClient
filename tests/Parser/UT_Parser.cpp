@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <../../../../../../dev/CodeCrafters/codecrafters-bittorrent-cpp/src/Decoder/Decoder.h>
+#include <Decoder/Decoder.h>
 
 TEST(Decoder, TestString)
 {

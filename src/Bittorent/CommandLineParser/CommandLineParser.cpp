@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../Decoder/Decoder.h"
+#include "Decoder/Decoder.h"
 
 namespace Bittorent {
 
@@ -24,7 +24,7 @@ void CommandLineParser::ParseCommandLineArguments(const std::vector<std::string_
 		const auto decodedValue = decoder.DecodeBencodedValue(encodedValue);
 		std::cout << decodedValue.dump() << std::endl;
 	}
-	else if (command == "infog")
+	else if (command == "info")
 	{
 	}
 	else
