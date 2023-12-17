@@ -14,5 +14,5 @@ target_link_libraries(UT_FileUtils
     FileUtils
 )
 
-add_test(NAME Bittorent_gtests COMMAND "${CMAKE_BINARY_DIR}/bin/UT_Parser")
-add_test(NAME FileUtilsTests COMMAND "${CMAKE_BINARY_DIR}/bin/UT_FileUtils")
+add_test(NAME UT_Parser COMMAND "${CMAKE_BINARY_DIR}/bin/UT_Parser")
+add_test(NAME UT_FileUtils COMMAND "${CMAKE_BINARY_DIR}/bin/UT_FileUtils")
