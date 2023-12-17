@@ -1,11 +1,18 @@
 find_package(GTest REQUIRED)
 
 add_executable(UT_Parser Parser/UT_Parser.cpp)
-
 target_link_libraries(UT_Parser
   PRIVATE
     GTest::GTest
     Decoder
 )
 
+add_executable(UT_FileUtils FileUtils/UT_FileUtils.cpp)
+target_link_libraries(UT_FileUtils
+  PRIVATE
+    GTest::GTest
+    FileUtils
+)
+
 add_test(NAME Bittorent_gtests COMMAND "${CMAKE_BINARY_DIR}/bin/UT_Parser")
+add_test(NAME FileUtilsTests COMMAND "${CMAKE_BINARY_DIR}/bin/UT_FileUtils")

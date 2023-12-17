@@ -12,10 +12,10 @@ class Decoder
 	using json = nlohmann::json;
 
 public:
-	Decoder();  // конструктор
-	~Decoder(); // детруктор
+	Decoder();
+	~Decoder();
 
-	json DecodeBencodedValue(const std::string & encodedValue);
+	json DecodeBencodedValue(const std::string_view encodedValue);
 
 private:
 	class Impl;

@@ -38,7 +38,7 @@ auto IsMap(const std::string_view encodedValue)
 	return encodedValue.starts_with('d') && encodedValue.ends_with('e');
 }
 
-EncodedValueType GetEncodedValueType(const std::string & encodedValue)
+EncodedValueType GetEncodedValueType(const std::string_view encodedValue)
 {
 	using enum EncodedValueType;
 	if (IsString(encodedValue))
@@ -53,7 +53,7 @@ EncodedValueType GetEncodedValueType(const std::string & encodedValue)
 		return Invalid;
 }
 
-auto ParseString(const std::string & encodedValue)
+auto ParseString(const std::string_view encodedValue)
 {
 	if (const auto colonIndex = encodedValue.find(':'); colonIndex != std::string::npos)
 	{
@@ -63,7 +63,7 @@ auto ParseString(const std::string & encodedValue)
 	}
 	else
 	{
-		throw std::runtime_error("Invalid encoded value: " + encodedValue);
+		throw std::runtime_error("Invalid encoded value: " + std::string(encodedValue));
 	}
 }
 
@@ -94,7 +94,7 @@ auto ParseStringInContainer(auto & frontIt, const std::string & str)
 	const auto numberOfSpecialCharacters = str.find(':') + 1;
 	frontIt += parsedString.size() + numberOfSpecialCharacters;
 
-	return parsedString;
+	return std::string(parsedString);
 }
 
 auto CountDigits(int64_t n)
@@ -125,14 +125,14 @@ auto ParseNumberInContainer(auto & frontIt, const std::string & str)
 class Decoder::Impl
 {
 public:
-	json DecodeString(const std::string & encodedValue) const
+	json DecodeString(const std::string_view encodedValue) const
 	{
 		return json(ParseString(encodedValue));
 	}
 
-	json DecodeNumber(const std::string & encodedValue) const
+	json DecodeNumber(const std::string_view encodedValue) const
 	{
-		return json(ParseNumber(encodedValue));
+		return json(ParseNumber(std::string(encodedValue)));
 	}
 
 	json DecodeList(const std::string_view encodedValue)
@@ -226,7 +226,7 @@ private:
 	}
 };
 
-json Decoder::DecodeBencodedValue(const std::string & encodedValue)
+json Decoder::DecodeBencodedValue(const std::string_view encodedValue)
 {
 	EncodedValueType type = GetEncodedValueType(encodedValue);
 
@@ -246,7 +246,7 @@ json Decoder::DecodeBencodedValue(const std::string & encodedValue)
 			return m_impl->DecodeMap(encodedValue);
 
 		default:
-			throw std::runtime_error("Unhandled encoded value: " + encodedValue);
+			throw std::runtime_error("Unhandled encoded value: " + std::string(encodedValue));
 	}
 }
 

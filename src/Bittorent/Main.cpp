@@ -1,7 +1,7 @@
 #include <iostream>
-#include <string.h>
 
 #include "../Decoder/Decoder.h"
+#include "CommandLineParser/CommandLineParser.h"
 
 using namespace Bittorent;
 
@@ -13,23 +13,16 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	if (const auto command = argv[1]; strcmp(command, "decode") == 0)
+	CommandLineParser clParser;
+	const auto clArguments = std::vector<std::string_view>(argv, argv + argc);
+	try
 	{
-		if (argc < 3)
-		{
-			std::cerr << "Usage: " << argv[0] << " decode <encoded_value>" << std::endl;
-			return 1;
-		}
-
-		std::string encodedValue = argv[2];
-		Decoder decoder;
-		auto decodedValue = decoder.DecodeBencodedValue(encodedValue);
-		std::cout << decodedValue.dump() << std::endl;
+		clParser.ParseCommandLineArguments(clArguments);
 	}
-	else
+	catch (const std::exception & e)
 	{
-		std::cerr << "unknown command: " << command << std::endl;
-		return 1;
+		std::cerr << "Exception caught during parsing command line arguments. Description: " << e.what();
+		throw; // crash!
 	}
 
 	return 0;
