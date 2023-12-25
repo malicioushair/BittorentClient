@@ -10,6 +10,23 @@ TEST(Decoder, TestString)
 	ASSERT_EQ(actual, expected);
 }
 
+TEST(Decoder, TestSimpleBinaryNonACIIString)
+{
+	Bittorent::Decoder decoder;
+	const auto actual = decoder.DecodeBencodedValue("12:йцукен").dump();
+	const auto expected = "\"йцукен\"";
+	const auto foo = std::string(expected).length();
+	ASSERT_EQ(actual, expected);
+}
+
+// TEST(Decoder, TestBinaryDataString)
+// {
+// 	Bittorent::Decoder decoder;
+// 	const auto expected = R"(иvцz*€†иуk\x13g&Г\xfў—\x3\x2-n\"uж\x4 vfVsnЃя\x10µR\x4­Ќ5р\r“z\x2\x13Я\x19‚јЌ\tr'­ћђљМ\x17)";
+// 	const auto actual = decoder.DecodeBencodedValue(R"(60:иvцz*€†иуk\x13g&Г\xfў—\x3\x2-n\"uж\x4 vfVsnЃя\x10µR\x4­Ќ5р\r“z\x2\x13Я\x19‚јЌ\tr'­ћђљМ\x17)").dump();
+// 	ASSERT_EQ(actual, expected);
+// }
+
 TEST(Decoder, TestNumber)
 {
 	Bittorent::Decoder decoder;
