@@ -1,1 +1,1 @@
-add_library(Decoder Decoder.h Decoder.cpp Nlohmann/json.hpp)
+add_library(Decoder Decoder.h Decoder.cpp)

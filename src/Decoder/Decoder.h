@@ -3,7 +3,7 @@
 #include <memory>
 #include <string.h>
 
-#include "Decoder/Nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 namespace Bittorent {
 

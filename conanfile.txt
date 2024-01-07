@@ -1,4 +1,5 @@
 [requires]
+nlohmann_json/3.11.3
 gtest/1.14.0
 
 [generators]
